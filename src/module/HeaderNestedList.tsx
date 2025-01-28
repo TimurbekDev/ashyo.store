@@ -36,7 +36,7 @@ const CategoryNestedList = () => {
                             onMouseEnter={() => showCategoryChildren(item)} 
                             className='flex cursor-pointer items-center text-[14px] hover:bg-white rounded-md duration-300 sm:text-[16px] gap-[15px] py-[8px] sm:py-[12px] pl-[10px] sm:pl-[40px]'>
                             <Image
-                                src={`${IMAGE_API}/files/${item.icon}`} 
+                                src={`${IMAGE_API}/${item.icon}`} 
                                 alt='category icon' 
                                 width={24} 
                                 height={24} 
