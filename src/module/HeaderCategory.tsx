@@ -1,6 +1,6 @@
 "use client"
 import { getCategories } from '@/services'
-import { CategoryType } from '@/types/CategoryType'
+import { CategoryType } from '@/types'
 import { Skeleton } from '@heroui/skeleton'
 import Link from 'next/link'
 import React from 'react'

@@ -1,3 +1,5 @@
-export * from "./ButtonComponent.jsx"
-export * from "./InputComponent.jsx"
-export * from "./ModalComponent.jsx"
+import Button from "./ButtonComponent";
+import Input from "./InputComponent";
+import Modal from "./ModalComponent";
+
+export { Button, Input, Modal };

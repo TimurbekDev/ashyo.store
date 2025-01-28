@@ -1,6 +1,7 @@
 "use client"
 import { CloseIcon } from '@/icons'
-import { ModalType } from '@/types/ModalType'
+import { ModalType } from '@/types'
+
 import React, { ReactNode, useState } from 'react'
 
 const Modal: React.FC<ModalType> = ({ children, modalClass, open, setOpen }) => {

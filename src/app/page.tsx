@@ -1,8 +1,11 @@
-import Header from "@/module/Header";
-import Image from "next/image";
+import { Brend } from "@/module/Brend";
+import { Hero } from "@/module/Hero";
 
 export default function Home() {
   return (
-    <h1>Main Page</h1>
+    <>
+      <Hero />
+      <Brend/>
+    </>
   );
 }

@@ -1,13 +1,13 @@
 "use client"
-
 import { ArrowIcon, MenuIcon } from '@/icons'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useContext } from 'react'
 import Search from './Search'
 import Actions from './Actions'
-import { Context } from '@/context/Context'
-import Button from '@/components/ButtonComponent'
+import { Context } from '@/context'
+import { Button } from '@/components'
+
 
 const HeaderMain = () => {
     const { showCategory, setShowCategory } = useContext(Context)

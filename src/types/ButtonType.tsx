@@ -6,5 +6,7 @@ export interface ButtonType{
     title?:string,
     extrClass?:string,
     type:"submit" | "button",
-    onClick?:MouseEventHandler<HTMLButtonElement>
+    onClick?:MouseEventHandler<HTMLButtonElement>,
+    isLoading?:boolean,
+    loading?:ReactNode
 }

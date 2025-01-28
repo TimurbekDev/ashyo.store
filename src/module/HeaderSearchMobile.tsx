@@ -2,8 +2,9 @@
 import React, { useContext } from 'react'
 import Search from './Search'
 import { ArrowIcon } from '@/icons'
-import { Context } from '@/context/Context'
-import Button from '@/components/ButtonComponent'
+import { Context } from '@/context'
+import { Button } from '@/components'
+
 
 const HeaderSearchMobile = () => {
     const { setShowCategory, showCategory } = useContext(Context)

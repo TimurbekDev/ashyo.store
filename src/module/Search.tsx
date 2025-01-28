@@ -1,9 +1,8 @@
-import Button from '@/components/ButtonComponent';
-import Input from '@/components/InputComponent';
-import debounce from '@/hooks/debounce';
+import { Button, Input } from '@/components';
+import { debounce } from '@/hooks';
 import { SearchIcon } from '@/icons';
 import { getCategories } from '@/services';
-import { CategoryType } from '@/types/CategoryType';
+import { CategoryType } from '@/types';
 import { Skeleton } from '@heroui/skeleton';
 import React, { ChangeEvent, useState } from 'react';
 const Search = () => {

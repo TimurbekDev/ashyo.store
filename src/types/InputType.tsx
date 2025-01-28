@@ -5,5 +5,6 @@ export interface InputType {
     placeholder:string,
     extraClass?:string,
     onChange?:ChangeEventHandler<HTMLInputElement>,
-    onBlur?:FocusEventHandler<HTMLInputElement>
+    onBlur?:FocusEventHandler<HTMLInputElement>,
+    name?:string
 }

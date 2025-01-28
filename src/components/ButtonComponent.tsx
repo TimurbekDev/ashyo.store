@@ -1,4 +1,5 @@
-import { ButtonType } from "@/types/ButtonType";
+
+import { ButtonType } from "@/types";
 import React from "react";
 
 const Button: React.FC<ButtonType> = ({ icon, iconPostion, title, type, extrClass, onClick }) => {

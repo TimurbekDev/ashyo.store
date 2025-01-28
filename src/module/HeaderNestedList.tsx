@@ -1,10 +1,9 @@
 "use client"
-import { Context } from '@/context/Context'
+import { Context } from '@/context'
 import { IMAGE_API } from '@/hooks/getEnv'
 import { getCategories } from '@/services'
-import { CategoryType } from '@/types/CategoryType'
+import { CategoryType } from '@/types'
 import { Skeleton } from '@heroui/skeleton'
-
 import Image from 'next/image'
 import React, { useContext, useState } from 'react'
 
