@@ -2,13 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-
 *{
     box-sizing: border-box;
 }
 
-.containers {
+.containers{
     max-width: 1280px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+
+.product-carucel > .swiper-wrapper > .swiper-slide{
+    width: 300px !important;
+}
+
+.swiper-button-prev, .swiper-button-next{
+    width: 44px !important;
+    height: 44px !important;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 1px 1px black;
+}
+
+.swiper-button-prev::after, .swiper-button-next::after{
+    font-size: 22px !important;
+    color: #545D6A;
+}
+
+.product-item:hover > div > .product-img{
+    transform: scale(1.1);
 }
