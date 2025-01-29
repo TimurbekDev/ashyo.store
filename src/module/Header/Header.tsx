@@ -4,10 +4,9 @@ import HeaderTop from "./HeaderTop"
 import HeaderSearchMobile from "./HeaderSearchMobile"
 import CategoryNestedList from "./HeaderNestedList"
 
-
 const Header = () => {
   return (
-    <header className="mb-[27px] sm:mb-[20px] relative">
+    <header className="sticky top-0 z-[999] bg-white pb-[27px]"> 
       <HeaderTop/>
       <HeaderMain/>
       <HeaderCategory/>

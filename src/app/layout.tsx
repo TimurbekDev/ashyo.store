@@ -5,7 +5,7 @@ import "./globals.css";
 import { QueryProvider } from "@/query/QueryProvider";
 import { ToastContainer } from "react-toastify";
 import { GlobalContext } from "@/context/Context";
-import Header from "@/module/Header";
+import Header from "@/module/Header/Header";
 import "react-toastify/dist/ReactToastify.css";
 
 const geistSans = Geist({
