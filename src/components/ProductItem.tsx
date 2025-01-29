@@ -18,7 +18,7 @@ const ProductItem: FC<{ item: ProductItemType }> = ({ item }) => {
                 <strong className='text-[20px] leading-[26px] font-bold' > {item.price} usz </strong>
                 < div className='flex gap-[10px]' >
                     <Button extrClass='!w-[52px] !h-[44px] !p-0 !bg-transparent border-[2px] border-[#EBEFF3]' type='button' icon={< CompareIcon />} iconPostion='left' />
-                    <Button extrClass='!w-[52px] !h-[44px] !p-0 text-white' type='button' icon={< BasketCartIcon />} iconPostion='left' />
+                    <Button extrClass='!w-[52px] !h-[44px] !p-0 text-white' type='button' icon={<BasketCartIcon />} iconPostion='left' />
                 </div>
             </div>
         </div>

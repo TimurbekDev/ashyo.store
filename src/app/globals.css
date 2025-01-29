@@ -27,7 +27,7 @@
 
 .swiper-button-prev::after, .swiper-button-next::after{
     font-size: 22px !important;
-    color: #545D6A;
+    color: #dedfe0;
 }
 
 .product-item:hover > div > .product-img{
