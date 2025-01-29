@@ -15,7 +15,7 @@ const HeaderCategory = () => {
             <Link 
               className='text-[18px] hover:text-black duration-300 leading-[21px] text-[#545D6A]'
               key={item.id} 
-              href='/'>
+              href='/1'>
               {item.name}
             </Link>
           )) 
