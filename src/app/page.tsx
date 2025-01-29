@@ -1,4 +1,4 @@
-import Products from "@/components/Products";
+import { Products } from "@/components";
 import Brend from "@/module/Brend";
 import CategoryMenu from "@/module/CategoryMenu";
 import Hero from "@/module/Hero";
