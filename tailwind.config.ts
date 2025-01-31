@@ -7,7 +7,7 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/module/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@heroui/theme/dist/components/(badge|navbar|skeleton).js"
+    "./node_modules/@heroui/theme/dist/components/(badge|input|navbar|skeleton|form).js"
   ],
   theme: {
     extend: {

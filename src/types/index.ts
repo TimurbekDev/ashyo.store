@@ -8,5 +8,5 @@ import { ContextType } from "./ContextType";
 import { BrandType } from "./BrandType";
 import { SignInType,SignUpType } from "./AuthType";
 import { BannerType } from "./BannerType";
-
-export type { ButtonType,BannerType, BrandType,SignInType,SignUpType, InputType, ModalType, CategoryType, LanguageType, HeaderTopListType, ContextType };
+import { UserTypes } from "./meTypes";
+export type { UserTypes,ButtonType,BannerType, BrandType,SignInType,SignUpType, InputType, ModalType, CategoryType, LanguageType, HeaderTopListType, ContextType };
