@@ -11,7 +11,7 @@ import { ProductItemType, ProductPageType } from '@/types/ProductType';
 import { getProducts } from '@/services';
 
 const Products: FC<ProductPageType> = ({ title, API, extraClass }) => {
-    const { products } = getProducts(API)
+    const { products } = getProducts()
     return (
         <div className={`mb-[48px] sm:mb-0 mt-[79px] ${extraClass}`
         }>
