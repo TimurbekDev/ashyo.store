@@ -27,9 +27,21 @@
 
 .swiper-button-prev::after, .swiper-button-next::after{
     font-size: 22px !important;
-    color: #dedfe0;
+    color: #545D6A;
 }
 
 .product-item:hover > div > .product-img{
     transform: scale(1.1);
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

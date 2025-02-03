@@ -9,4 +9,5 @@ import { BrandType } from "./BrandType";
 import { SignInType,SignUpType } from "./AuthType";
 import { BannerType } from "./BannerType";
 import { UserTypes } from "./meTypes";
-export type { UserTypes,ButtonType,BannerType, BrandType,SignInType,SignUpType, InputType, ModalType, CategoryType, LanguageType, HeaderTopListType, ContextType };
+import {ProductFilterType,VarationType} from "./VaritionTypes"
+export type { UserTypes,ButtonType,BannerType, BrandType,SignInType,SignUpType,ProductFilterType,VarationType, InputType, ModalType, CategoryType, LanguageType, HeaderTopListType, ContextType };

@@ -3,4 +3,6 @@ import { auth } from "./auth";
 import { getBanners } from "./getBanners";
 import { getBrands } from "./getBrends";
 import { getProducts } from "./getProducts";
-export { getCategories,auth,getBanners,getBrands ,getProducts};
+import { getVaration } from "./getVaration";
+
+export { getCategories,auth,getBanners,getBrands ,getProducts,getVaration};

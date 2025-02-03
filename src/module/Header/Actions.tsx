@@ -11,6 +11,7 @@ import { UserTypes } from "@/types";
 import {Input as NextUIInput} from "@heroui/input";
 import { FaCamera, FaEye } from "react-icons/fa";
 
+
 const Actions = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token, setToken } = useContext(Context);
@@ -48,27 +49,34 @@ console.log(isVerified)
     },
   ];
 
+
   async function handleUpdateUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-   
+    
+  } 
 
-  }
 
   async function handleVerifyUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    const res = await instance().post("/auth/verify-send",{email}, {
-      
-      headers: {
-        Authorization: `Bearer ${token}`,
+    console.log(email)
+    try {
+      const res = await instance().post("/auth/verify-send", { email }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    
+      toast.success("Verification sended check email");
+      await userProfileModalSettings()
+      if(isVerified){
+        setIsVerified(true)
+        toast.success("Verfication successfully")
       }
-    })
-    if (res.status === 200) {
-      toast.success("User Verfied successfully")
-      setIsVerified(true)
-    } else{
-      toast.error("User Verfication failed")
+    } catch (error) {
+      console.log(error)
+      toast.error("Verification failed");
     }
+    
 
   }
 
@@ -204,7 +212,7 @@ console.log(isVerified)
       </Modal>
 
       <Modal
-        modalClass="h-auto min-h-[320px] md:min-h-[400px]"
+        modalClass="!h-[320px]"
         open={meModal}
         setOpen={setMeModal}
       >
@@ -243,14 +251,12 @@ console.log(isVerified)
             <NextUIInput
               label="Full Name"
               value={userName}
-              onChange={(e) => setUserName(e.target.value)}
               className="w-full"
               name="updateFullName"
             />
             <NextUIInput
               label="Password"
               placeholder="Your new password"
-              onChange={(e) => setEmail(e.target.value)}
               name="updatePassword"
             />
           </div>

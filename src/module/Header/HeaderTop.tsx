@@ -16,7 +16,7 @@ const HeaderTop = () => {
     {
       id: 2,
       title: 'About Us',
-      path: '/about-us',
+      path: '/about',
       icon: null,
     },
     {
