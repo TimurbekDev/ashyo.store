@@ -1,58 +1,59 @@
 import axios from "axios";
 import { API } from "./getEnv";
-import { useContext } from "react";
-import { toast } from "react-toastify";
 
-
-const getAccessToken = () => {
-  return localStorage.getItem("accessToken");
-};
 const getRefreshToken = () => {
   return localStorage.getItem("refreshToken");
 };
+
+let refreshingToken:any = null;
+
 const refreshAccessToken = async () => {
-  try {
-    const refreshToken = getRefreshToken();
-    toast.error("Refresh token topilmadi.")
-    const response = await axios.post(`${API}/auth/refrsh-access-token`, { refreshToken });
-    const { accessToken } = response.data.user.access_token;
-    localStorage.setItem("accessToken", accessToken);
-    return accessToken;
-  } catch (error) {
-    toast.error("Refresh tokenni ishlatishda xatolik bor.")
-    throw error;
+  if (!refreshingToken) {
+    refreshingToken = axios.post(`${API}/auth/refrsh-access-token`, { refreshToken: getRefreshToken() })
+      .then((response) => {
+        localStorage.setItem("accessToken", response.data.access_token);
+        return response.data.access_token;
+      })
+      .finally(() => {
+        refreshingToken = null;
+      });
   }
+  return refreshingToken;
 };
+
 export const instance = () => {
   const axiosInstance = axios.create({
     baseURL: API,
   });
-  axiosInstance.interceptors.request.use(
-    (config) => {
-      const token = getAccessToken();
-      if (token) {
-        config.headers["Authorization"] = `Bearer ${token}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
+
+  axiosInstance.interceptors.request.use((config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  });
+
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      const { response } = error;
+      const refreshToken = getRefreshToken();
       
-      if (response && response.status === 401) {
+      if (error.response?.status === 401 && refreshToken) {
         try {
-          const newAccessToken = await refreshAccessToken();      
-          error.config.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axios(error.config); 
-        } catch (refreshError) {
-          return Promise.reject(refreshError);
+          const newAccessToken = await refreshAccessToken();
+          if (newAccessToken) {
+            error.config.headers.Authorization = `Bearer ${newAccessToken}`;
+            return axiosInstance(error.config);
+          }
+        } catch (err) {
+          console.error("Failed to refresh token", err);
         }
       }
+
       return Promise.reject(error);
     }
   );
+
   return axiosInstance;
 };

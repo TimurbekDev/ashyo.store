@@ -33,13 +33,14 @@ const ProductItem: FC<{ item: ProductItemType }> = ({ item }) => {
         {
           headers: { Authorization: `Bearer ${token}` },
         }
-      ),
+      ).catch(),
     onSuccess: () => {
       toast.success("Yangi mahsulot savatga qoshildi.");
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
-    onError: () => {
-      toast.error("Xatolik yuz berdi.");
+    onError: (error:any) => {
+      if(error === 401)
+        toast.warn("Siz login qilmagansiz");
     },
   });
   const likeMutation = useMutation({
@@ -52,13 +53,14 @@ const ProductItem: FC<{ item: ProductItemType }> = ({ item }) => {
             Authorization: `Bearer ${token}`,
           },
         }
-      ),
+      ).catch(),
     onSuccess: () => {
       toast.success("Liked");
-      queryClient.invalidateQueries({ queryKey: ["likes"] });
+      queryClient.invalidateQueries({ queryKey: ['likes'] });
     },
-    onError: () => {
-      toast.error("Xatolik yuz berdi");
+    onError: (error:any) => {
+      if(error === 401)
+        toast.warn("Siz login qilmagansiz");
     },
   });
   function handleLikeClick(id: string | number) {

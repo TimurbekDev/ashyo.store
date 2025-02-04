@@ -14,7 +14,7 @@ export const GlobalContext: React.FC<{ children: ReactNode }> = ({ children }) =
     const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem("token");
+        const storedToken = localStorage.getItem("accessToken");
         if (storedToken) {
             setToken(storedToken);
         }
@@ -22,7 +22,7 @@ export const GlobalContext: React.FC<{ children: ReactNode }> = ({ children }) =
 
     useEffect(() => {
         if (token) {
-            localStorage.setItem("token", token);
+            localStorage.setItem("accessToken", token);
         }
     }, [token]);
 

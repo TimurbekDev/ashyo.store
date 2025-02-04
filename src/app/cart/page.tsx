@@ -7,7 +7,9 @@ import { CartItemType } from '@/types'
 import React from 'react'
 
 const Cart = () => {
-    const { cartItems } = getCart()
+    const { cartItems } = getCart();
+    console.log(cartItems);
+    
     let total = 0
     cartItems.map((item: CartItemType)=>total+=(item.productItem.price * item.count))
     return (
