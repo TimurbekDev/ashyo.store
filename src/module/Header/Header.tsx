@@ -11,7 +11,7 @@ const Header = () => {
       <HeaderMain/>
       <HeaderCategory/>
       <HeaderSearchMobile/>
-      <CategoryNestedList/>
+      <CategoryNestedList />
     </header>
   )
 }

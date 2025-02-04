@@ -8,5 +8,6 @@ export interface ButtonType{
     type:"submit" | "button",
     onClick?:MouseEventHandler<HTMLButtonElement>,
     isLoading?:boolean,
-    loading?:ReactNode
+    loading?:ReactNode,
+    disabled?: boolean
 }

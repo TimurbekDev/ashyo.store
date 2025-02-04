@@ -5,4 +5,6 @@ import { getBrands } from "./getBrends";
 import { getProducts } from "./getProducts";
 import { getVaration } from "./getVaration";
 import { getSingleProduct } from "./getSingleProduct";
-export { getCategories,auth,getBanners,getBrands ,getProducts,getVaration,getSingleProduct};
+import { getLikes } from "./getLikes";
+
+export { getCategories,auth,getBanners,getBrands ,getProducts,getVaration,getSingleProduct,getLikes};

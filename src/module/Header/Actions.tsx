@@ -1,7 +1,7 @@
 import { Button, Input, Modal } from "@/components";
 import { Context } from "@/context";
 import { BasketCartIcon, CompareIcon, LikeIcon, ProfileIcon } from "@/icons";
-import { auth } from "@/services";
+import { auth, getLikes } from "@/services";
 import Image from "next/image";
 import React, { FormEvent, useContext, useState } from "react";
 import { SignIn, SignUp } from "./auth";
@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { UserTypes } from "@/types";
 import {Input as NextUIInput} from "@heroui/input";
 import { FaCamera, FaEye } from "react-icons/fa";
+import { getCart } from "@/services/getAllCart";
 
 
 const Actions = () => {
@@ -25,7 +26,8 @@ const Actions = () => {
   const [password, setPassword] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);
-console.log(isVerified)
+  const {likes} = getLikes()
+  const {cartItems} = getCart()
   const actionList = [
     {
       id: 1,
@@ -34,12 +36,12 @@ console.log(isVerified)
     },
     {
       id: 2,
-      bageCount: 11,
+      bageCount: likes.length ? likes.length:0,
       icon: <LikeIcon />,
     },
     {
       id: 3,
-      bageCount: 11,
+      bageCount: cartItems.length?cartItems.length:0,
       icon: <BasketCartIcon />,
     },
     {
