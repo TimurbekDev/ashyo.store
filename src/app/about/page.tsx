@@ -93,7 +93,7 @@ export default function AshyoPage() {
               ))}
             </div>
           <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">Ashyo haqida</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{sideBarList[state-1].title}</h1>
 
             <div className="aspect-[2/1] overflow-hidden rounded-lg bg-[#6366f1]">
               <div className="flex h-full items-center justify-center">

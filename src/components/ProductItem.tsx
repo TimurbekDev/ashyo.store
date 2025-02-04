@@ -69,7 +69,6 @@ const ProductItem: FC<{ item: ProductItemType }> = ({ item }) => {
     cartItemMutation.mutate(id);
   }
 
-  console.log(likes);
   return (
     <div className="w-full sm:w-[273px] relative product-item duration-300">
       <div className="bg-[#EBEFF3] relative rounded-[8px] mb-[16px] flex items-center justify-center h-[280px]">

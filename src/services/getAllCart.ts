@@ -10,6 +10,5 @@ export const getCart = () => {
         queryKey: ['cart'],
         queryFn: () => instance().get('/cart/user',{headers: {Authorization: `Bearer ${token}`}}).then(res => res.data?.cart[0].cartItems)
     })
-    console.log(cartItems)
     return {cartItems, isLoading}
 }

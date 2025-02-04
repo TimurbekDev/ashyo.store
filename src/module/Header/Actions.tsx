@@ -63,7 +63,6 @@ const Actions = () => {
 
   async function handleVerifyUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log(email)
     try {
       const res = await instance().post("/auth/verify-send", { email }, {
         headers: {
@@ -78,15 +77,11 @@ const Actions = () => {
         toast.success("Verfication successfully")
       }
     } catch (error) {
-      console.log(error)
       toast.error("Verification failed");
     }
-    
 
   }
-
-
-
+  
   async function userProfileModalSettings() {
     setMeModal(true);
     const response = await instance().get("/me", {

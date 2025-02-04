@@ -14,7 +14,6 @@ const ContactPage = () => {
             email: (e.target as HTMLFormElement).email.value,
             text: (e.target as HTMLFormElement).userquestion.value,
         }
-        console.log(data)
     }
   return (
     <>

@@ -16,7 +16,6 @@ const SingleProducts = () => {
     const [showComment, setShowComment] = useState<"Varation" | "Comments">("Varation")
     const productid = Array.isArray(id) ? id[0] : id
     const {singleProducts} = getSingleProduct(productid)
-    console.log(singleProducts)
   return (
     <div className='containers !pt-10'>
         <h2 className='font-bold text-[32px] leading-[41px] mb-[31px]'>{singleProducts?.name}</h2>
