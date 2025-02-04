@@ -12,6 +12,8 @@ setToken?: Dispatch<SetStateAction<string | null>>) => {
         return instance().post(`/auth/sign-in`, data).then(res => {
             setToken(res.data.access_token);
             toast.success(`Welcome ${res.data.user.fullName}` )
+            localStorage.setItem("refreshToken",res.data.refresh_token)
+            localStorage.setItem("accessToken",res.data.access_token)
             return res
         }).catch(() => {
             toast.error("User not found!")

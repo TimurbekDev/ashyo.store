@@ -1,3 +1,4 @@
+"use client"
 import { Button, Input, Modal } from "@/components";
 import { Context } from "@/context";
 import { BasketCartIcon, CompareIcon, LikeIcon, ProfileIcon } from "@/icons";
@@ -11,6 +12,7 @@ import { UserTypes } from "@/types";
 import {Input as NextUIInput} from "@heroui/input";
 import { FaCamera, FaEye } from "react-icons/fa";
 import { getCart } from "@/services/getAllCart";
+import { useRouter } from "next/navigation";
 
 
 const Actions = () => {
@@ -28,6 +30,7 @@ const Actions = () => {
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const {likes} = getLikes()
   const {cartItems} = getCart()
+  const router = useRouter()
   const actionList = [
     {
       id: 1,
@@ -120,6 +123,8 @@ const Actions = () => {
         setProfileModal(true);
         toast.warning("Please sign in");
       }
+    } else if(id ==3) {
+      router.push(`/cart`)
     }
   }
 
@@ -137,6 +142,7 @@ const Actions = () => {
         (e.target as HTMLFormElement).reset();
         setIsLoading(false);
       }
+
     } else if (authStatus == "sign_up") {
       const data = {
         fullName: (e.target as HTMLFormElement).fullName.value,

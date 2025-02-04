@@ -1,34 +1,119 @@
+import { Context } from "@/context";
+import { IMAGE_API, instance } from "@/hooks";
+import { getLikes } from "@/services";
+import { CartItemType, LikesType } from "@/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Heart, Trash2 } from "lucide-react";
 
-import { IMAGE_API } from '@/hooks'
-import { CartItemType } from '@/types'
-import Image from 'next/image'
-import React, { FC } from 'react'
+import Image from "next/image";
+import React, { FC, useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const CartProduct: FC<{ item: CartItemType }> = ({ item }) => {
-    return (
-            <div className='flex justify-between w-[] gap-[31px]'>
-                <div className='w-[202px] h-[170px] bg-[#EBEFF3] rounded-[8px] flex items-center justify-center'>
-                    <Image src={`${IMAGE_API}/${item.product.image}`} alt='Cart img' width={115} height={115} />
-                </div>
-                <div className='flex flex-col py-[17px]'>
-                    <h2 className='text-[18px] text-[#545D6A] mb-[51px]'>{item.product.name}</h2>
-                    <div className='flex items-center gap-[10px]'>
-                        <button className='w-[52px] h-[52px] flex items-center justify-center bg-[#EBEFF3] rounded-[7px]'> <LikeIcon /> </button>
-                        <button className='w-[52px] h-[52px] flex items-center justify-center bg-[#EBEFF3] rounded-[7px]'> <RemoveIcon /> </button>
-                    </div>
-                </div>
-                <div className='py-[17px] '>
-                    <div className='flex items-center gap-[10px] mb-[51px]'>
-                        <strong className='font-bold text-[24px]'>2 470 000</strong> <span className='text-[14px]'>USZ</span>
-                    </div>
-                    <div className='flex items-center gap-[28px]'>
-                        <button className='w-[60px] text-[24px] h-[40px] bg-[#EBEFF3] flex items-center justify-center rounded-[7px]'>-</button>
-                        <button className='w-[60px] text-[24px] h-[40px] bg-[#EBEFF3] flex items-center justify-center rounded-[7px]'>1</button>
-                        <button className='w-[60px] text-[24px] h-[40px] bg-[#EBEFF3] flex items-center justify-center rounded-[7px]'>+</button>
-                    </div>
-                </div>
-            </div>
-    )
-}
+  const [count, setCount] = useState<number>(item.count);
+  const { token } = useContext(Context);
+  const queryClient = useQueryClient();
+  const { likes } = getLikes();
+  const countMutation = useMutation({
+    mutationFn: (newCount: number) =>
+      instance().patch(
+        `/cart-item/${item.id}`,
+        { count: newCount },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to update cart item");
+    },
+  });
 
-export default CartProduct
+  function handleChangeCount(newCount: number) {
+    if (newCount < 1) return;
+    setCount(newCount);
+    countMutation.mutate(newCount);
+  }
+
+  const deleteMutation = useMutation({
+    mutationFn: () =>
+      instance().delete(`/cart-item/${item.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    onSuccess: () => {
+      toast.success("Maxsulot savatdan o'chirildi.");
+      queryClient.invalidateQueries({ queryKey: ["cart"] });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.message || "Failed to update cart item");
+    },
+  });
+
+  return (
+    <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-8 p-4 border rounded-lg shadow-sm bg-white">
+      <div className="w-full md:w-[202px] h-[170px] bg-gray-200 rounded-lg flex items-center justify-center">
+        <Image
+          src={`${IMAGE_API}/${item.productItem.image}`}
+          alt="Cart img"
+          width={115}
+          height={115}
+          className="object-cover"
+        />
+      </div>
+      <div className="flex flex-col flex-grow py-4">
+        <h2 className="text-lg text-gray-700 mb-4">{item.productItem.name}</h2>
+        <div className="flex items-center gap-4">
+          <button
+            className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+            disabled={likes.some(
+                (like: LikesType) => like.productItemId === item.id
+              )}
+          >
+            {likes.some((like: LikesType) => like.productItemId === item.id) ? (
+              <Heart color="red" style={{ fill: "red" }} />
+            ) : (
+              <Heart />
+            )}
+
+          </button>
+          <button
+            className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+            onClick={() => deleteMutation.mutate()}
+          >
+            <Trash2 />
+          </button>
+        </div>
+      </div>
+      <div className="py-4 flex flex-col justify-between">
+        <div className="flex items-center gap-2 mb-4">
+          <strong className="text-xl font-bold">
+            {item.productItem.price}
+          </strong>{" "}
+          <span className="text-sm">USZ</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <button
+            className="w-12 h-10 text-xl bg-gray-200 flex items-center justify-center rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
+            onClick={() => handleChangeCount(count - 1)}
+            disabled={count <= 1}
+          >
+            -
+          </button>
+          <span className="w-12 h-10 text-xl bg-gray-200 flex items-center justify-center rounded-lg">
+            {count}
+          </span>
+          <button
+            className="w-12 h-10 text-xl bg-gray-200 flex items-center justify-center rounded-lg hover:bg-gray-300 transition"
+            onClick={() => handleChangeCount(count + 1)}
+          >
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CartProduct;
