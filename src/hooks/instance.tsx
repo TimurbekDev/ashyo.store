@@ -5,7 +5,7 @@ const getRefreshToken = () => {
   return localStorage.getItem("refreshToken");
 };
 
-let refreshingToken:any = null;
+let refreshingToken: any = null;
 
 const refreshAccessToken = async () => {
   if (!refreshingToken) {
@@ -38,7 +38,7 @@ export const instance = () => {
     (response) => response,
     async (error) => {
       const refreshToken = getRefreshToken();
-      
+
       if (error.response?.status === 401 && refreshToken) {
         try {
           const newAccessToken = await refreshAccessToken();
@@ -50,6 +50,9 @@ export const instance = () => {
           console.error("Failed to refresh token", err);
         }
       }
+      if (error.response.status == 401) {
+        return Promise.reject(error.response.status)
+      }
 
       return Promise.reject(error);
     }
@@ -57,3 +60,4 @@ export const instance = () => {
 
   return axiosInstance;
 };
+  
