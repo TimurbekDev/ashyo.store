@@ -22,6 +22,7 @@ const ProductItem: FC<{ item: ProductItemType }> = ({ item }) => {
   const queryClient = useQueryClient();
   const { isLoading, likes } = getLikes();
   const { cartItems } = getCart();
+  console.log(`salom  ${cartItems}`)
   const cartItemMutation = useMutation({
     mutationFn: (id: string | number) =>
       instance().post(

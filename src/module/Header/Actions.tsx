@@ -39,12 +39,12 @@ const Actions = () => {
     },
     {
       id: 2,
-      bageCount: likes.length ? likes.length:0,
+      bageCount: likes.length ? likes.length:"",
       icon: <LikeIcon />,
     },
     {
       id: 3,
-      bageCount: cartItems.length?cartItems.length:0,
+      bageCount: cartItems.length?cartItems.length:"",
       icon: <BasketCartIcon />,
     },
     {
@@ -120,6 +120,8 @@ const Actions = () => {
       }
     } else if(id ==3) {
       router.push(`/cart`)
+    } else if (id==2){
+      router.push("/favorites")
     }
   }
 

@@ -4,11 +4,27 @@ import { Button } from '@/components'
 import CartProduct from '@/components/CartProduct'
 import { getCart } from '@/services/getAllCart'
 import { CartItemType } from '@/types'
+import Image from 'next/image'
 import React from 'react'
+import noDataImage from "../../../public/no-data.png"
 
 const Cart = () => {
     const { cartItems } = getCart();
-    console.log(cartItems);
+    if (!cartItems.length) {
+        return (
+          <div className="containers mx-auto h-[60vh]">
+            <h2 className="font-bold text-[22px] mb-6">Savat</h2>
+            <div className="w-full h-full flex items-center justify-center">
+              <Image
+                src={noDataImage}
+                width={400}
+                height={400}
+                alt="no data image"
+              />
+            </div>
+          </div>
+        );
+      }
     
     let total = 0
     cartItems.map((item: CartItemType)=>total+=(item.productItem.price * item.count))
