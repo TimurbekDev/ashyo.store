@@ -33,7 +33,6 @@ const ContactPage = () => {
                 return
             }
         })
-        console.log(data)
         setEmail("")
         setName("")
         setPhone("")

@@ -1,19 +1,20 @@
-"use client"
+"use client";
 import { Button, Input, Modal } from "@/components";
 import { Context } from "@/context";
 import { BasketCartIcon, CompareIcon, LikeIcon, ProfileIcon } from "@/icons";
 import { auth, getLikes } from "@/services";
 import Image from "next/image";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { ChangeEvent, FormEvent, useContext, useRef, useState } from "react";
 import { SignIn, SignUp } from "./auth";
 import { IMAGE_API, instance } from "@/hooks";
 import { toast } from "react-toastify";
 import { UserTypes } from "@/types";
-import {Input as NextUIInput} from "@heroui/input";
+import { Input as NextUIInput } from "@heroui/input";
 import { FaCamera, FaEye } from "react-icons/fa";
 import { getCart } from "@/services/getAllCart";
 import { useRouter } from "next/navigation";
-
+import { getMe } from "@/services/getMe";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Actions = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,10 +28,15 @@ const Actions = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [isVerified, setIsVerified] = useState<boolean>(false);
-  const {likes} = getLikes()
-  const {cartItems} = getCart()
-  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const queryClient = useQueryClient()
+  const { likes } = getLikes();
+  const { cartItems } = getCart();
+  const {userData} = getMe()
+  const router = useRouter();
   const actionList = [
     {
       id: 1,
@@ -39,12 +45,12 @@ const Actions = () => {
     },
     {
       id: 2,
-      bageCount: likes.length ? likes.length:"",
+      bageCount: likes.length ? likes.length : "",
       icon: <LikeIcon />,
     },
     {
       id: 3,
-      bageCount: cartItems.length?cartItems.length:"",
+      bageCount: cartItems.length ? cartItems.length : "",
       icon: <BasketCartIcon />,
     },
     {
@@ -55,50 +61,87 @@ const Actions = () => {
   ];
 
 
-  async function handleUpdateUser(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    
-  } 
 
+  function handleLogOut(){
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
+    router.push("/")
+  }
+
+  const updateUserMutation = useMutation({
+    mutationFn: (formData: any) =>instance().patch("/me", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Ma'lumotlar yangilandi!");
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      setPassword("")
+      setMeModal(false)
+    },
+    onError: () => {
+      toast.error("Xatolik yuz berdi, qaytadan urinib ko'ring!");
+    },
+  });
+  
+  const handleUpdateUser = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+  
+
+  
+    const formData = new FormData();
+    formData.append("fullName", userName);
+    formData.append("email", email);
+    formData.append("password", password);
+  
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+  
+    updateUserMutation.mutate(formData)
+  };
+  
 
   async function handleVerifyUser(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
-      const res = await instance().post("/auth/verify-send", { email }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    
+      const res = await instance().post(
+        "/auth/verify-send",
+        { email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Verification sended check email");
-      await userProfileModalSettings()
-      if(isVerified){
-        setIsVerified(true)
-        toast.success("Verfication successfully")
+      await userProfileModalSettings();
+      if (isVerified) {
+        setIsVerified(true);
+        toast.success("Verfication successfully");
       }
     } catch (error) {
       toast.error("Verification failed");
     }
-
   }
+
+  const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImageFile(file);
+    const objectUrl = URL.createObjectURL(file);
+    setImage(objectUrl);
+  };
   
+
   async function userProfileModalSettings() {
     setMeModal(true);
-    const response = await instance().get("/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (response.status === 200) {
-      const userData = response.data.user;
       setUserName(userData.fullName);
-      setEmail(userData.email);
-      setPassword(userData.password);
       setImage(userData.image);
       setIsVerified(userData.isVerified);
-    } else {
-      toast.warning("Authentication failed");
-    }
+    
   }
 
   async function handleActionClick(id: number) {
@@ -118,10 +161,10 @@ const Actions = () => {
         setProfileModal(true);
         toast.warning("Please sign in");
       }
-    } else if(id ==3) {
-      router.push(`/cart`)
-    } else if (id==2){
-      router.push("/favorites")
+    } else if (id == 3) {
+      router.push(`/cart`);
+    } else if (id == 2) {
+      router.push("/favorites");
     }
   }
 
@@ -138,8 +181,8 @@ const Actions = () => {
         setProfileModal(false);
         (e.target as HTMLFormElement).reset();
         setIsLoading(false);
+        window.location.reload()
       }
-
     } else if (authStatus == "sign_up") {
       const data = {
         fullName: (e.target as HTMLFormElement).fullName.value,
@@ -216,15 +259,12 @@ const Actions = () => {
         </form>
       </Modal>
 
-      <Modal
-        modalClass="!h-[320px]"
-        open={meModal}
-        setOpen={setMeModal}
-      >
+      <Modal modalClass="!h-[320px]" open={meModal} setOpen={setMeModal}>
         <div className="flex items-center justify-center flex-col border w-full max-w-sm md:max-w-md lg:max-w-lg">
           <div className="relative w-[100px] h-[100px] group">
+          
             <Image
-              src={image ? image : "/music-img.png"}
+              src={image ? image.startsWith("blob:") ? image : `${IMAGE_API}/${image}` : "/music-img.png"}
               alt="user image"
               width={100}
               height={100}
@@ -232,25 +272,35 @@ const Actions = () => {
             />
             <div className="absolute inset-0 flex">
               <div className="w-1/2 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-l-full">
-                <FaEye
+                {!image?.startsWith("blob:")?<FaEye
                   className="text-white w-6 h-6 cursor-pointer"
                   onClick={() => {
                     if (image) {
-                      window.location.href = `${IMAGE_API}/image`;
+                      window.location.href = `${IMAGE_API}/${image}`;
                     } else {
                       const randomImage =
                         "https://source.unsplash.com/random/100x100";
                       window.location.href = randomImage;
                     }
                   }}
-                />
+                />: ""}
               </div>
               <div className="w-1/2 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-r-full">
-                <FaCamera className="text-white w-6 h-6 cursor-pointer" />
+              <input
+                  type="file"
+                  accept="image/*"
+                  hidden
+                  ref={fileInputRef}
+                  onChange={(e) => handleFileSelect(e)
+                  }
+                />
+                <FaCamera 
+                  className="text-white w-6 h-6 cursor-pointer" 
+                  onClick={() => fileInputRef.current?.click()}
+                  />
               </div>
             </div>
           </div>
-
 
           <div className="w-full px-5 flex flex-col space-y-3">
             <NextUIInput
@@ -258,24 +308,30 @@ const Actions = () => {
               value={userName}
               className="w-full"
               name="updateFullName"
+              onChange={(e)=>setUserName(e.target.value)}
             />
             <NextUIInput
               label="Password"
               placeholder="Your new password"
               name="updatePassword"
+              onChange={(e)=>setPassword(e.target.value)}
             />
           </div>
 
-
-        <div className="w-full px-5 flex items-center justify-around mt-3">
-              <form onSubmit={handleUpdateUser}>
-                <Button type="submit" title="Save"></Button>
-              </form>
-              <form onSubmit={handleVerifyUser}>
-                {isVerified ? <p>Verfied</p>: <Button type="submit" title="Verify"></Button>}
-              </form>
- 
-        </div>
+          <div className="w-full px-5 flex items-center justify-around mt-3">
+            <form onSubmit={handleUpdateUser}>
+              <Button type="submit" title="Save"></Button>
+            </form>
+            <Button title="Log Out" type="button" onClick={()=>handleLogOut()}/>
+            <form onSubmit={handleVerifyUser}>
+              {isVerified ? (
+                <p>Verfied</p>
+              ) : (
+                <Button type="submit" title="Verify"></Button>
+              )}
+            </form>
+           
+          </div>
         </div>
       </Modal>
     </>

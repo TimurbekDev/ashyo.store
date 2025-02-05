@@ -1,50 +1,85 @@
-"use client"
-import ProductFilter from '@/components/ProductFilter'
-import ProductItem from '@/components/ProductItem'
-import ProductItemSkeleton from '@/components/ProductItemSkeleton'
-import { getProducts } from '@/services'
-import { ProductItemType } from '@/types/ProductType'
-import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-
+"use client";
+import ProductFilter from "@/components/ProductFilter";
+import ProductItem from "@/components/ProductItem";
+import ProductItemSkeleton from "@/components/ProductItemSkeleton";
+import { getProducts } from "@/services";
+import { ProductItemType } from "@/types/ProductType";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import noDataImage from "../../../public/no-data.png";
+import Image from "next/image";
 const Products = () => {
-  const [minPrice, setMinPrice] = useState<number>(0)
-  const [maxPrice, setMaxPrice] = useState<number>(0)
-  const [search, setSearch] = useState<string | null>(null)
-  const [brandId, setBrandId] = useState<number | null>(null)
-  const [variationFilters, setVariationFilters] = useState<number[]>([]) // Default empty array
+  const [minPrice, setMinPrice] = useState<number>(0);
+  const [maxPrice, setMaxPrice] = useState<number>(0);
+  const [search, setSearch] = useState<string | null>(null);
+  const [brandId, setBrandId] = useState<number | null>(null);
+  const [variationFilters, setVariationFilters] = useState<number[]>([]); // Default empty array
 
-  const route = useSearchParams()
+  const route = useSearchParams();
 
   useEffect(() => {
-    const searchQuery = route.get('search')
+    const searchQuery = route.get("search");
     if (searchQuery !== search) {
-      setSearch(searchQuery)
+      setSearch(searchQuery);
     }
-  }, [route])
+  }, [route]);
 
-  const { products, isLoading } = getProducts(minPrice, maxPrice, brandId, search)
+  const { products, isLoading } = getProducts(
+    minPrice,
+    maxPrice,
+    brandId,
+    search
+  );
+  if (!products.length) {
+    return (
+      <div className="flex containers gap-[20px]">
+        <div className="w-[25%] h-full sticky top-0">
+          <ProductFilter
+            setBrandId={setBrandId}
+            setMinPrice={setMinPrice}
+            setMaxPrice={setMaxPrice}
+          />
+        </div>
 
+        <div className="w-[75%] h-[400px] flex justify-center items-center
+        
+        ">
+          <Image
+            alt="no data image"
+            src={noDataImage}
+            width={400}
+            height={400}
+          />
+        </div>
+      </div>
+    );
+  }
+  
   return (
-    <div className='flex containers gap-[20px]'>
-      
-      <div className='w-[25%] h-full sticky top-0'>
-        <ProductFilter 
-          setBrandId={setBrandId} 
-          setMinPrice={setMinPrice} 
-          setMaxPrice={setMaxPrice} 
+    <div className="flex containers gap-[20px]">
+      <div className="w-[25%] h-full sticky top-0">
+        <ProductFilter
+          setBrandId={setBrandId}
+          setMinPrice={setMinPrice}
+          setMaxPrice={setMaxPrice}
         />
       </div>
 
-      <div className='w-[75%] h-[800px] pb-5 overflow-y-auto overscroll-y-none flex flex-wrap justify-between gap-[20px]'>
+      <div className="w-[75%] h-[800px] pb-5 overflow-y-auto overscroll-y-none flex flex-wrap justify-between gap-[20px]">
         {isLoading ? (
-          <ProductItemSkeleton extraClass='!flex-wrap !justify-between !gap-[20px] !space-x-0' />
+          <ProductItemSkeleton extraClass="!flex-wrap !justify-between !gap-[20px] !space-x-0" />
         ) : (
-          products?.map((item: ProductItemType) => <ProductItem key={item.id} item={item} />)
+          products?.map((item: ProductItemType) => (
+            <ProductItem key={item.id} item={item} />
+          ))
         )}
       </div>
     </div>
-  )
-}
+  );
 
-export default Products
+
+
+  
+};
+
+export default Products;

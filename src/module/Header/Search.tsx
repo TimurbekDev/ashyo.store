@@ -1,4 +1,4 @@
-
+"use client"
 import { Button, Input } from '@/components'
 import debounce from '@/hooks/debounce'
 import { SearchIcon } from '@/icons'
@@ -6,6 +6,7 @@ import { getCategories } from '@/services'
 
 import { CategoryType } from '@/types/CategoryType'
 import { Skeleton } from '@heroui/skeleton'
+
 import React, { ChangeEvent, useState } from 'react'
 
 const Search = () => {
@@ -13,6 +14,10 @@ const Search = () => {
 
   const name = debounce(searchValue, 1000)
   const {categories, isLoading} = getCategories(name)
+  
+  function handeleToCategory(name: string){
+   window.location.href=`/products?search=${name}`
+  }
 
   function handleSearchChange(e:ChangeEvent<HTMLInputElement>){
     if((e.target as HTMLInputElement).value){
@@ -30,7 +35,7 @@ const Search = () => {
 
             <ul className={`${searchValue == "empty" && "h-0 opacity-0"} z-50 duration-300 overflow-hidden ${isLoading && "px-5 pt-[39px] pb-[10px]"} absolute w-full bg-white top-[67px] shadow-md`}>
               {isLoading ? <Skeleton className="h-5 w-full rounded-lg" /> : categories.map((item:CategoryType)=> (
-                <li key={item.id} className='py-[17px] cursor-pointer hover:bg-[#EBEFF3] duration-300 pl-[40px] border-b-[1.5px] border-slate-300'>{item.name}</li>
+                <li key={item.id} onClick={()=>handeleToCategory(item.name)} className='py-[17px] cursor-pointer hover:bg-[#EBEFF3] duration-300 pl-[40px] border-b-[1.5px] border-slate-300'>{item.name}</li>
               ))}
             </ul>
         </form>
