@@ -5,7 +5,7 @@ import { BasketCartIcon, CompareIcon, LikeIcon, ProfileIcon } from "@/icons";
 import { auth, getLikes } from "@/services";
 import Image from "next/image";
 import React, { ChangeEvent, FormEvent, useContext, useRef, useState } from "react";
-import { SignIn, SignUp } from "./auth";
+import { ForgotPassword, ResetPassword, SignIn, SignUp } from "./auth";
 import { IMAGE_API, instance } from "@/hooks";
 import { toast } from "react-toastify";
 import { UserTypes } from "@/types";
@@ -19,7 +19,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const Actions = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token, setToken } = useContext(Context);
-  const [authStatus, setAuthStatus] = useState<"sign_in" | "sign_up">(
+  const [authStatus, setAuthStatus] = useState<"sign_in" | "sign_up" | "forgot_password" | "reset_password">(
     "sign_in"
   );
   const [profileModal, setProfileModal] = useState<boolean>(false);
@@ -66,6 +66,8 @@ const Actions = () => {
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
     router.push("/")
+    setMeModal(false)
+    setProfileModal(true)
   }
 
   const updateUserMutation = useMutation({
@@ -194,6 +196,31 @@ const Actions = () => {
         setAuthStatus("sign_in");
         (e.target as HTMLFormElement).reset();
       }
+    } else if(authStatus == "forgot_password"){
+      const data = {
+        email: (e.target as HTMLFormElement).forgot_email.value
+      }
+      const now = new Date().getTime();
+      const expiry = now + (60000*3);
+      sessionStorage.setItem("email",JSON.stringify({email: data.email, expiry}))
+      const result = await auth("forgot_password", data)
+      if(result?.status == 201 || result?.status==200){
+        setAuthStatus("reset_password");
+        (e.target as HTMLFormElement).reset();
+      }
+    } 
+    else if(authStatus == "reset_password"){
+      const email  = JSON.parse(sessionStorage.getItem("email") as string).email
+      const data = {
+        email:email,
+        password: (e.target as HTMLFormElement).reset_password.value,
+        code: (e.target as HTMLFormElement).reset_otp.value
+      }
+      const result = await auth("reset_password",data)
+      if(result?.status==200 || result?.status==201){
+        setAuthStatus("sign_in");
+        (e.target as HTMLFormElement).reset()
+      }
     }
   }
   return (
@@ -215,7 +242,7 @@ const Actions = () => {
         ))}
       </div>
       <Modal
-        modalClass={`!h-[420px]`}
+        modalClass={`!h-[420px] ${authStatus=="reset_password"?"!h-[500px]":""}`}
         open={profileModal}
         setOpen={setProfileModal}
       >
@@ -254,8 +281,10 @@ const Actions = () => {
           </li>
         </ul>
         <form onSubmit={handleAuthSubmit} className="px-5 mt-5 space-y-2">
-          {authStatus == "sign_in" && <SignIn isLoading={isLoading} />}
+          {authStatus == "sign_in" && <SignIn isLoading={isLoading} setAuthStatus={setAuthStatus}/>}
           {authStatus == "sign_up" && <SignUp isLoading={isLoading} />}
+          {authStatus == "forgot_password" && <ForgotPassword isLoading={isLoading} setAuthStatus={setAuthStatus}/>}
+          {authStatus == "reset_password" && <ResetPassword isLoading={isLoading} />}
         </form>
       </Modal>
 

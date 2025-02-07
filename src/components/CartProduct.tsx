@@ -51,6 +51,31 @@ const CartProduct: FC<{ item: CartItemType }> = ({ item }) => {
     },
   });
 
+    const likeMutation = useMutation({
+      mutationFn: (id: string | number) =>
+        instance().post(
+          "/like/user",
+          { productItemId: id },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        ).catch(),
+      onSuccess: () => {
+        toast.success("Liked");
+        queryClient.invalidateQueries({ queryKey: ['likes'] });
+      },
+      onError: (error:any) => {
+        if(error === 401)
+          toast.warn("Siz login qilmagansiz");
+      },
+    });
+
+  function handleLikeClick(id: string | number) {
+    likeMutation.mutate(id);
+  }
+
   return (
     <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-8 p-4 border rounded-lg shadow-sm bg-white">
       <div className="w-full md:w-[202px] h-[170px] bg-gray-200 rounded-lg flex items-center justify-center">
@@ -66,12 +91,13 @@ const CartProduct: FC<{ item: CartItemType }> = ({ item }) => {
         <h2 className="text-lg text-gray-700 mb-4">{item.productItem.name}</h2>
         <div className="flex items-center gap-4">
           <button
-            className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+            className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-lg hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={likes.some(
-                (like: LikesType) => like.productItemId === item.id
+                (like: LikesType) => like.productItemId === item.productItem.id
               )}
+            onClick={() => handleLikeClick(item.productItem.id)}
           >
-            {likes.some((like: LikesType) => like.productItemId === item.id) ? (
+            {likes.some((like: LikesType) => like.productItemId === item.productItem.id) ? (
               <Heart color="red" style={{ fill: "red" }} />
             ) : (
               <Heart />
