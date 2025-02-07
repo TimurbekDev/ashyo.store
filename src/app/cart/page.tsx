@@ -25,6 +25,8 @@ const Cart = () => {
           </div>
         );
       }
+
+      
     
     let total = 0
     cartItems.map((item: CartItemType)=>total+=(item.productItem.price * item.count))

@@ -109,6 +109,8 @@ const CartProduct: FC<{ item: CartItemType }> = ({ item }) => {
             onClick={() => deleteMutation.mutate()}
           >
             <Trash2 />
+
+            
           </button>
         </div>
       </div>

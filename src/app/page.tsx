@@ -6,6 +6,7 @@ import Footer from "@/module/Footer";
 import Hero from "@/module/Hero";
 
 
+
 export default function Home() {
   return (
     <>

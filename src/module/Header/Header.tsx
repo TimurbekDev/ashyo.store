@@ -3,6 +3,7 @@ import HeaderMain from "./HeaderMain"
 import HeaderTop from "./HeaderTop"
 import HeaderSearchMobile from "./HeaderSearchMobile"
 import CategoryNestedList from "./HeaderNestedList"
+import BredCumps from "./BredCumps"
 
 const Header = () => {
   return (
@@ -12,6 +13,7 @@ const Header = () => {
       <HeaderCategory/>
       <HeaderSearchMobile/>
       <CategoryNestedList />
+      <BredCumps/>
     </header>
   )
 }
